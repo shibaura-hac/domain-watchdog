@@ -1,8 +1,7 @@
 from whois import whois
 from datetime import datetime
 import requests
-from settings import *
-
+from os import environ
 
 def sendMessage(message):
     data = {
@@ -10,7 +9,7 @@ def sendMessage(message):
         "username": "watchdog"
     }
 
-    response = requests.post(WEBHOOK_URL, json=data)
+    response = requests.post(environ["WEBHOOK_URL"], json=data)
 
     if response.status_code == 204:
         print("Message sent successfully!")
@@ -30,13 +29,14 @@ def timedelta_to_ymd(delta):
     return years, months, days
 
 def main():
-    whois_data = whois(DOMAIN)
+    whois_data = whois(environ["DOMAIN"])
     expiration_date = whois_data.expiration_date
     now = datetime.now()
 
     delta = expiration_date - now
 
-    if (delta < 0):
+
+    if (delta.total_seconds() < 0):
         sendMessage("ドメイン切れてます")
         return
     
