@@ -1,6 +1,6 @@
 name: Check Expiration
 on:
-  workflow-dispatch:
+  workflow_dispatch:
   schedule:
     - cron: "00 10 1 * *"
 jobs:
